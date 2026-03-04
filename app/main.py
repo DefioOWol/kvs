@@ -5,7 +5,7 @@ import asyncio
 import grpc
 
 from app.config import GRPC_PORT
-from app.servers.kvstore_server import KeyValueStore
+from app.servers.kvstore import KeyValueStore
 from protos.kvstore import kvstore_pb2_grpc
 
 

@@ -24,7 +24,7 @@ jobs:
         run: uv sync --frozen
 
       - name: Ruff format check
-        run: uv run ruff format --check server
+        run: uv run ruff format --check app
 
       - name: Ruff lint check
-        run: uv run ruff check server
+        run: uv run ruff check app

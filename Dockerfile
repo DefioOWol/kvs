@@ -6,8 +6,8 @@ WORKDIR /app
 
 COPY pyproject.toml uv.lock /app
 COPY protos /app/protos
-COPY server /app/server
+COPY app /app/app
 
 RUN pip install --no-cache-dir --upgrade uv && uv sync --frozen --no-dev
 
-CMD ["python", "server/main.py"]
+CMD ["python", "app/main.py"]

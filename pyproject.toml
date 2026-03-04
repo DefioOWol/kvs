@@ -1,0 +1,6 @@
+[project]
+name = "KVS"
+version = "0.1.0"
+description = "Key-Value Store"
+requires-python = ">=3.12"
+dependencies = []

@@ -44,9 +44,7 @@ class LRUKeyValueStorage(IKeyValueStorage):
             return False
         return not self._is_expired(item)
 
-    def get_by_prefix(
-        self, *, prefix: str | None = None
-    ) -> list[dict[str, Any]]:
+    def get_many(self, *, prefix: str | None = None) -> list[dict[str, Any]]:
         return [
             {"key": k, **v}
             for k, v in self._data.items()

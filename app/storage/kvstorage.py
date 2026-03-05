@@ -13,7 +13,5 @@ class IKeyValueStorage(Protocol):
     def delete(self, key: str) -> bool:
         pass
 
-    def get_by_prefix(
-        self, *, prefix: str | None = None
-    ) -> list[dict[str, Any]]:
+    def get_many(self, *, prefix: str | None = None) -> list[dict[str, Any]]:
         pass

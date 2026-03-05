@@ -3,7 +3,7 @@
 from typing import Any, Protocol
 
 
-class KeyValueStorage(Protocol):
+class IKeyValueStorage(Protocol):
     def put(self, data: dict[str, Any]) -> dict[str, Any]:
         pass
 

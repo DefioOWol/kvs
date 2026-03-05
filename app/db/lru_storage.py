@@ -4,10 +4,10 @@ from collections import OrderedDict
 from datetime import datetime, timedelta
 from typing import Any
 
-from app.db.kvstorage import KeyValueStorage
+from app.db.kvstorage import IKeyValueStorage
 
 
-class LRUStorage(KeyValueStorage):
+class LRUStorage(IKeyValueStorage):
     def __init__(self, maxsize: int | None = None):
         self._maxsize = maxsize
         self._data = OrderedDict[str, dict[str, Any]]()

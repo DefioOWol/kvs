@@ -2,27 +2,53 @@
 
 import grpc
 
+from app.servers.utils import GrpcParser
+from app.services.kvstore import IKeyValueStoreService
 from protos.kvstore import kvstore_pb2
 from protos.kvstore.kvstore_pb2_grpc import KeyValueStoreServicer
 
 
 class KeyValueStore(KeyValueStoreServicer):
+    def __init__(self, kvstore_service: IKeyValueStoreService):
+        self._kvstore_service = kvstore_service
+
     async def Put(
         self, request: kvstore_pb2.PutRequest, context: grpc.ServicerContext
     ) -> kvstore_pb2.PutResponse:
-        pass
+        if not request.key.strip():
+            context.abort(
+                grpc.StatusCode.INVALID_ARGUMENT, "Key cannot be empty"
+            )
+        if request.ttl_seconds < 0:
+            context.abort(
+                grpc.StatusCode.INVALID_ARGUMENT, "TTL cannot be negative"
+            )
+
+        await self._kvstore_service.put(GrpcParser.msg_to_dict(request))
+        return kvstore_pb2.PutResponse()
 
     async def Get(
         self, request: kvstore_pb2.GetRequest, context: grpc.ServicerContext
     ) -> kvstore_pb2.GetResponse:
-        pass
+        item = await self._kvstore_service.get(request.key)
+        if not item:
+            context.abort(grpc.StatusCode.NOT_FOUND, "Key not found")
+        return GrpcParser.dict_to_msg(item, kvstore_pb2.GetResponse())
 
     async def Delete(
         self, request: kvstore_pb2.DeleteRequest, context: grpc.ServicerContext
     ) -> kvstore_pb2.DeleteResponse:
-        pass
+        if not await self._kvstore_service.delete(request.key):
+            context.abort(grpc.StatusCode.NOT_FOUND, "Key not found")
+        return kvstore_pb2.DeleteResponse()
 
     async def List(
         self, request: kvstore_pb2.ListRequest, context: grpc.ServicerContext
     ) -> kvstore_pb2.ListResponse:
-        pass
+        items = await self._kvstore_service.get_by_prefix(request.prefix)
+        return kvstore_pb2.ListResponse(
+            [
+                GrpcParser.dict_to_msg(item, kvstore_pb2.KeyValue())
+                for item in items
+            ]
+        )

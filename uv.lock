@@ -90,22 +90,24 @@ wheels = [
 name = "kvs"
 version = "0.1.0"
 source = { virtual = "." }
+dependencies = [
+    { name = "grpcio" },
+    { name = "grpcio-tools" },
+]
 
 [package.dev-dependencies]
 dev = [
-    { name = "grpcio" },
-    { name = "grpcio-tools" },
     { name = "ruff" },
 ]
 
 [package.metadata]
-
-[package.metadata.requires-dev]
-dev = [
+requires-dist = [
     { name = "grpcio", specifier = ">=1.78.0" },
     { name = "grpcio-tools", specifier = ">=1.78.0" },
-    { name = "ruff", specifier = ">=0.15.4" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "ruff", specifier = ">=0.15.4" }]
 
 [[package]]
 name = "protobuf"

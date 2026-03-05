@@ -3,12 +3,13 @@ name = "KVS"
 version = "0.1.0"
 description = "Key-Value Store"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "grpcio>=1.78.0",
+    "grpcio-tools>=1.78.0",
+]
 
 [dependency-groups]
 dev = [
-    "grpcio>=1.78.0",
-    "grpcio-tools>=1.78.0",
     "ruff>=0.15.4",
 ]
 

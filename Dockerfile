@@ -10,4 +10,4 @@ COPY app /app/app
 
 RUN pip install --no-cache-dir --upgrade uv && uv sync --frozen --no-dev
 
-CMD ["python", "app/main.py"]
+CMD ["uv", "run", "--no-sync", "python", "-m", "app.main"]

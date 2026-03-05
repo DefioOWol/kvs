@@ -47,7 +47,7 @@ class KeyValueStore(KeyValueStoreServicer):
     ) -> kvstore_pb2.ListResponse:
         items = await self._service.get_by_prefix(request.prefix)
         return kvstore_pb2.ListResponse(
-            [
+            items=[
                 GrpcParser.dict_to_msg(item, kvstore_pb2.KeyValue())
                 for item in items
             ]

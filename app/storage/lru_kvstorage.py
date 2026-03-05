@@ -1,13 +1,13 @@
-"""LRU хранилище."""
+"""LRU Key-Value хранилище."""
 
 from collections import OrderedDict
 from datetime import datetime, timedelta
 from typing import Any
 
-from app.db.kvstorage import IKeyValueStorage
+from app.storage.kvstorage import IKeyValueStorage
 
 
-class LRUStorage(IKeyValueStorage):
+class LRUKeyValueStorage(IKeyValueStorage):
     def __init__(self, maxsize: int | None = None):
         self._maxsize = maxsize
         self._data = OrderedDict[str, dict[str, Any]]()
@@ -18,11 +18,11 @@ class LRUStorage(IKeyValueStorage):
             ttl = datetime.now() + timedelta(seconds=ttl)
         item = {"value": data["value"], "expired_at": None if ttl == 0 else ttl}
 
-        self._data[key] = item
-        self._data.move_to_end(key)
-
-        if self._maxsize and len(self._data) > self._maxsize:
+        if key in self._data:
+            self._data.move_to_end(key)
+        elif self._maxsize and len(self._data) == self._maxsize:
             self._data.popitem(last=False)
+        self._data[key] = item
 
         return {"key": key, **item}
 

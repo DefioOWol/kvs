@@ -16,11 +16,11 @@ class KeyValueStore(KeyValueStoreServicer):
         self, request: kvstore_pb2.PutRequest, context: grpc.ServicerContext
     ) -> kvstore_pb2.PutResponse:
         if not request.key.strip():
-            context.abort(
+            await context.abort(
                 grpc.StatusCode.INVALID_ARGUMENT, "Key cannot be empty"
             )
         if request.ttl_seconds < 0:
-            context.abort(
+            await context.abort(
                 grpc.StatusCode.INVALID_ARGUMENT, "TTL cannot be negative"
             )
 
@@ -32,14 +32,14 @@ class KeyValueStore(KeyValueStoreServicer):
     ) -> kvstore_pb2.GetResponse:
         item = await self._service.get(request.key)
         if not item:
-            context.abort(grpc.StatusCode.NOT_FOUND, "Key not found")
+            await context.abort(grpc.StatusCode.NOT_FOUND, "Key not found")
         return GrpcParser.dict_to_msg(item, kvstore_pb2.GetResponse())
 
     async def Delete(
         self, request: kvstore_pb2.DeleteRequest, context: grpc.ServicerContext
     ) -> kvstore_pb2.DeleteResponse:
         if not await self._service.delete(request.key):
-            context.abort(grpc.StatusCode.NOT_FOUND, "Key not found")
+            await context.abort(grpc.StatusCode.NOT_FOUND, "Key not found")
         return kvstore_pb2.DeleteResponse()
 
     async def List(
